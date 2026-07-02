@@ -44,9 +44,13 @@ async function loadFolder(folder){
     const url =
     `https://api.github.com/repos/${USER}/${REPO}/contents/${folder}`;
 
-    const response = await fetch(url);
+	const response = await fetch(url);
 
-    const files = await response.json();
+	console.log(folder);
+
+	const files = await response.json();
+
+	console.log(files);
 
     let html = "";
 
