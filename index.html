@@ -1,75 +1,102 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide Kuliah - Dr. Khozin Mu'tamar</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Slide Kuliah - Dr. Khozin Mu'tamar</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<header>
+<div class="container">
+
     <h1>Slide Kuliah</h1>
-    <p>Dr. Khozin Mu'tamar</p>
+
     <p class="subtitle">
         Seluruh slide yang tersedia merupakan versi terbaru.
     </p>
-</header>
 
-<main>
+    <div id="content"></div>
 
-<section class="card">
+</div>
 
-<h2>📘 Fungsi Peubah Kompleks</h2>
+<script>
 
-<ul>
+const USER = "kmutamar";
+const REPO = "SLIDE-KULIAH";
 
-<li><a href="FVK/00--KONTRAK-FVK.pdf">00. Kontrak Kuliah</a></li>
+const folders = [
+    "FVK",
+    "PON",
+    "PKL",
+    "TKO"
+];
 
-<li><a href="FVK/01--BILANGAN-KOMPLEKS.pdf">01. Bilangan Kompleks</a></li>
+const judul = {
+    "FVK":"Fungsi Peubah Kompleks",
+    "PON":"Persamaan Diferensial",
+    "PKL":"Praktikum Komputasi",
+    "TKO":"Teori Kontrol"
+};
 
-<li><a href="FVK/02--FUNGSI-KOMPLEKS.pdf">02. Fungsi Kompleks</a></li>
+async function loadFolder(folder){
 
-<li><a href="FVK/03--FUNGSI-ANALITIK.pdf">03. Fungsi Analitik</a></li>
+    const url =
+    `https://api.github.com/repos/${USER}/${REPO}/contents/${folder}`;
 
-<li><a href="FVK/04--TRANSFORMASI-ELEMENTER.pdf">04. Transformasi Elementer</a></li>
+    const response = await fetch(url);
 
-<li><a href="FVK/05--INTEGRAL-GARIS.pdf">05. Integral Garis</a></li>
+    const files = await response.json();
 
-<li><a href="FVK/06--INTEGRAL-KOMPLEKS.pdf">06. Integral Kompleks</a></li>
+    let html = "";
 
-<li><a href="FVK/07--INTEGRAL-CAUCHY.pdf">07. Integral Cauchy</a></li>
+    html += `<section>`;
+    html += `<h2>${judul[folder] ?? folder}</h2>`;
+    html += `<ul>`;
 
-<li><a href="FVK/08--BARISAN-DERET-KOMPLEKS.pdf">08. Barisan dan Deret Kompleks</a></li>
+    files
+        .filter(f => f.name.toLowerCase().endsWith(".pdf"))
+        .sort((a,b)=>a.name.localeCompare(b.name))
+        .forEach(file=>{
 
-</ul>
+            let nama=file.name
+                .replace(".pdf","")
+                .replace(/--/g," ")
+                .replace(/-/g," ");
 
-</section>
+            html += `
+            <li>
+            <a href="${file.download_url}" target="_blank">
+            ${nama}
+            </a>
+            </li>`;
+        });
 
+    html += `</ul>`;
+    html += `</section>`;
 
+    return html;
+}
 
-<section class="card">
+async function loadWebsite(){
 
-<h2>📙 Persamaan Nonlinier</h2>
+    let hasil="";
 
-<ul>
+    for(const folder of folders){
+        hasil += await loadFolder(folder);
+    }
 
-<li><a href="PON/UJI.pdf">Uji</a></li>
+    document.getElementById("content").innerHTML=hasil;
 
-</ul>
+}
 
-</section>
+loadWebsite();
 
-<script src="script.js"></script>
-
-</main>
-
-<footer>
-
-© 2026 Dr. Khozin Mu'tamar
-
-</footer>
+</script>
 
 </body>
 </html>
