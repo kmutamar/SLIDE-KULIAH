@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,7 +23,7 @@
 
     <div id="tabs"></div>
 
-	<div id="content"></div>
+    <div id="content"></div>
 
 </div>
 
@@ -46,13 +47,9 @@ async function loadFolder(folder){
     const url =
     `https://api.github.com/repos/${USER}/${REPO}/contents/${folder}`;
 
-	const response = await fetch(url);
+    const response = await fetch(url);
 
-	console.log(folder);
-
-	const files = await response.json();
-
-	console.log(files);
+    const files = await response.json();
 
     let html = "";
 
@@ -65,16 +62,16 @@ async function loadFolder(folder){
         .sort((a,b)=>a.name.localeCompare(b.name))
         .forEach(file=>{
 
-            let nama=file.name
+            let nama = file.name
                 .replace(".pdf","")
                 .replace(/--/g," ")
                 .replace(/-/g," ");
 
             html += `
             <li>
-            <a href="${file.download_url}" target="_blank">
-            ${nama}
-            </a>
+                <a href="${file.download_url}" target="_blank">
+                    ${nama}
+                </a>
             </li>`;
         });
 
@@ -84,15 +81,39 @@ async function loadFolder(folder){
     return html;
 }
 
+async function tampil(folder){
+
+    document
+        .querySelectorAll(".tab")
+        .forEach(tab => tab.classList.remove("active"));
+
+    document
+        .getElementById(folder)
+        .classList.add("active");
+
+    document.getElementById("content").innerHTML =
+        await loadFolder(folder);
+}
+
 async function loadWebsite(){
 
-    let hasil="";
+    let html = "";
 
     for(const folder of folders){
-        hasil += await loadFolder(folder);
+
+        html += `
+        <button
+            class="tab"
+            id="${folder}"
+            onclick="tampil('${folder}')">
+            ${judul[folder]}
+        </button>`;
     }
 
-    document.getElementById("content").innerHTML=hasil;
+    document.getElementById("tabs").className = "tabs";
+    document.getElementById("tabs").innerHTML = html;
+
+    tampil(folders[0]);
 
 }
 
