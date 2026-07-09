@@ -1,51 +1,39 @@
-const user = "kmutamar";
-const repo = "SLIDE-KULIAH";
-const branch = "main";
+async function tampil(folder){
 
-const folders = [
-    "FVK",
-    "PON",
-    "PKL",
-    "TKO"
-];
+    document.querySelectorAll(".tab")
+        .forEach(x=>x.classList.remove("active"));
 
-folders.forEach(loadFolder);
+    document.getElementById(folder)
+        .classList.add("active");
 
-async function loadFolder(folder){
+    document.getElementById("content").innerHTML =
+        await loadFolder(folder);
+}
 
-    const url =
-    `https://api.github.com/repos/${user}/${repo}/contents/${folder}?ref=${branch}`;
+async function loadWebsite(){
 
-    const response = await fetch(url);
+    let html="";
 
-    const files = await response.json();
+    folders.forEach(folder=>{
 
-    const ul = document.getElementById(folder);
+        html+=`
+        <button
+            class="tab"
+            id="${folder}"
+            onclick="tampil('${folder}')">
 
-    ul.innerHTML="";
+            ${judul[folder]}
 
-    files
-        .filter(f=>f.name.endsWith(".pdf"))
-        .sort((a,b)=>a.name.localeCompare(b.name))
-        .forEach(file=>{
+        </button>
+        `;
 
-            const li=document.createElement("li");
+    });
 
-            const a=document.createElement("a");
+    document.getElementById("tabs").className="tabs";
+    document.getElementById("tabs").innerHTML=html;
 
-            a.href=file.download_url;
-
-            a.target="_blank";
-
-            a.textContent=file.name
-                .replace(".pdf","")
-                .replaceAll("--",". ")
-                .replaceAll("-"," ");
-
-            li.appendChild(a);
-
-            ul.appendChild(li);
-
-        });
+    tampil(folders[0]);
 
 }
+
+loadWebsite();

@@ -56,32 +56,3 @@ a:hover{
     color:#d12b2b;
     text-decoration:underline;
 }
-
-.tabs{
-    display:flex;
-    gap:12px;
-    margin:50px 0 40px;
-    flex-wrap:wrap;
-}
-
-.tab{
-    padding:12px 24px;
-    border-radius:10px;
-    border:2px solid #1d3c91;
-    background:white;
-    color:#1d3c91;
-    cursor:pointer;
-    font-size:22px;
-    font-weight:600;
-    transition:.2s;
-}
-
-.tab:hover{
-    background:#1d3c91;
-    color:white;
-}
-
-.tab.active{
-    background:#1d3c91;
-    color:white;
-}
