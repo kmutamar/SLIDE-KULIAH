@@ -2,13 +2,12 @@
 <html lang="id">
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Slide Kuliah - Dr. Khozin Mu'tamar</title>
+    <title>Slide Kuliah - Dr. Khozin Mu'tamar</title>
 
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -18,14 +17,14 @@
     <h1>Slide Kuliah</h1>
 
     <p class="subtitle">
-        Slide digenerate secara otomatis oleh workflow github. <br>
-		Seluruh slide yang tersedia merupakan versi terbaru.
+        Slide digenerate secara otomatis oleh workflow GitHub.<br>
+        Seluruh slide yang tersedia merupakan versi terbaru.
     </p>
-	
-	<p class="author">
-		Dr. Khozin Mu'tamar<br>
-		Jurusan Matematika, FMIPA, Universitas Riau.
-	</p>
+
+    <p class="author">
+        Dr. Khozin Mu'tamar<br>
+        Jurusan Matematika, FMIPA, Universitas Riau.
+    </p>
 
     <div id="tabs"></div>
 
@@ -33,101 +32,7 @@
 
 </div>
 
-<script>
-
-const USER = "kmutamar";
-const REPO = "SLIDE-KULIAH";
-
-const folders = [
-    "FVK",
-    "PON",
-	"PKL"
-];
-
-const judul = {
-    "FVK":"Fungsi Peubah Kompleks",
-    "PON":"Pengantar Optimisasi Numerik",
-	"PKL":"Pengantar Kontrol Linier"
-};
-
-async function loadFolder(folder){
-
-    const url =
-    `https://api.github.com/repos/${USER}/${REPO}/contents/${folder}`;
-
-    const response = await fetch(url);
-
-    const files = await response.json();
-
-    let html = "";
-
-    html += `<section>`;
-    html += `<h2>${judul[folder] ?? folder}</h2>`;
-    html += `<ul>`;
-
-    files
-        .filter(f => f.name.toLowerCase().endsWith(".pdf"))
-        .sort((a,b)=>a.name.localeCompare(b.name))
-        .forEach(file=>{
-
-            let nama = file.name
-                .replace(".pdf","")
-                .replace(/--/g," ")
-                .replace(/-/g," ");
-
-            html += `
-            <li>
-                <a href="${file.download_url}" target="_blank">
-                    ${nama}
-                </a>
-            </li>`;
-        });
-
-    html += `</ul>`;
-    html += `</section>`;
-
-    return html;
-}
-
-async function tampil(folder){
-
-    document
-        .querySelectorAll(".tab")
-        .forEach(tab => tab.classList.remove("active"));
-
-    document
-        .getElementById(folder)
-        .classList.add("active");
-
-    document.getElementById("content").innerHTML =
-        await loadFolder(folder);
-}
-
-async function loadWebsite(){
-
-    let html = "";
-
-    for(const folder of folders){
-
-        html += `
-        <button
-            class="tab"
-            id="${folder}"
-            onclick="tampil('${folder}')">
-            ${judul[folder]}
-        </button>`;
-    }
-
-    document.getElementById("tabs").className = "tabs";
-    document.getElementById("tabs").innerHTML = html;
-
-    tampil(folders[0]);
-
-}
-
-loadWebsite();
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
